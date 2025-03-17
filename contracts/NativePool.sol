@@ -35,6 +35,7 @@ contract NativePool is INativePool {
     function deposit(uint256 amount) external payable {
         require(msg.value == amount, "NativePool: invalid amount");
     }
+
     function withdraw(uint256 amount) external onlyOwner {
         require(
             amount <= address(this).balance,
@@ -42,6 +43,7 @@ contract NativePool is INativePool {
         );
         payable(owner).transfer(amount);
     }
+
     function transfer(address to, uint256 amount) external onlyBridgeOrOwner {
         require(
             amount <= address(this).balance,
@@ -60,16 +62,20 @@ contract NativePool is INativePool {
         payable(feeCollector).transfer(feeAccumulated);
         feeAccumulated = 0;
     }
+
     function registerBridge(address bridge) external onlyOwner {
         bridges.add(bridge);
     }
+
     function unregisterBridge(address bridge) external onlyOwner {
         bridges.remove(bridge);
     }
+
     function setFee(uint256 fee_) external onlyOwner {
         require(fee_ <= 1000, "NativePool: fee too high");
         fee = fee_;
     }
+
     function setFeeCollector(address feeCollector_) external onlyOwner {
         feeCollector = feeCollector_;
     }
@@ -77,6 +83,7 @@ contract NativePool is INativePool {
     function remaining() external view returns (uint256) {
         return address(this).balance;
     }
+
     function getBridges() external view returns (address[] memory) {
         address[] memory result = new address[](bridges.length());
         for (uint256 i = 0; i < bridges.length(); i++) {
@@ -84,6 +91,7 @@ contract NativePool is INativePool {
         }
         return result;
     }
+
     function getBridgesLength() external view returns (uint256) {
         return bridges.length();
     }
